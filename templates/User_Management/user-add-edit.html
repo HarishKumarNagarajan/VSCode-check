@@ -1,0 +1,333 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <style>
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+            }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.dropdown-search-filter').select2();
+                var number = document.getElementById('MobileNumber');
+                // Listen for input event on numInput.
+                number.onkeydown = function(e) {
+                    if(!((e.keyCode > 95 && e.keyCode < 106)
+                    || (e.keyCode > 47 && e.keyCode < 58) 
+                    || e.keyCode == 8)) {
+                        return false;
+                    }
+                }
+                LoadCenterddl();
+                LoadUserRoleddl();
+                if('{{user_id}}' !=0)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetUserDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.UserDetail!="")
+                               {
+                                   $('#FirstName').val(data.UserDetail.First_Name);
+                                   $('#LastName').val(data.UserDetail.Last_Name);
+                                   $('#Email').val(data.UserDetail.Email);
+                                   $('#MobileNumber').val(data.UserDetail.Mobile_Number);
+                                   if(data.UserDetail.Center_Id != null)
+                                    $('#ddlCenter').val(data.UserDetail.Center_Id.split(',')).change();
+                                   $('#ddlUserRole').val(data.UserDetail.User_Role_Id).change();
+                                   if(data.UserDetail.Is_Active)
+                                        $('#isactive').prop('checked',true);
+                                    else
+                                        $('#isactive').prop('checked',false);
+                                    if(data.UserDetail.Is_Reporting_Manager)
+                                        $('#isReportingManager').prop('checked',true);
+                                    else
+                                        $('#isReportingManager').prop('checked',false);
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+
+            function LoadCenterddl(){
+                var URL=$('#hdn_web_url').val()+ "/AllCenterList"
+                $.ajax({
+                    type:"GET",
+                    url:URL,
+                    async:false,
+                    beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+                    datatype:"json",
+                    success: function (data){
+                        if(data.Centers != null)
+                        {
+                            $('#ddlCenter').empty();
+                            var count=data.Centers.length;
+                            if( count> 0)
+                            {
+                                $('#ddlCenter').append(new Option('Choose Center',''));
+                                for(var i=0;i<count;i++)
+                                    $('#ddlCenter').append(new Option(data.Centers[i].Center_Name,data.Centers[i].Center_Id));
+                            }
+                            else
+                            {
+                                $('#ddlCenter').append(new Option('Choose Center',''));
+                            }
+                        }
+                    },
+                    error:function(err)
+                    {
+                        alert('Error! Please try again');
+                        return false;
+                    }
+                });
+                return false;
+            }
+
+            function LoadUserRoleddl(){
+                var URL=$('#hdn_web_url').val()+ "/AllUserRole"
+                $.ajax({
+                    type:"GET",
+                    url:URL,
+                    async:false,
+                    beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+                    datatype:"json",
+                    success: function (data){
+                        if(data.UserRoles != null)
+                        {
+                            $('#ddlUserRole').empty();
+                            var count=data.UserRoles.length;
+                            if( count> 0)
+                            {
+                                $('#ddlUserRole').append(new Option('Choose User Role',''));
+                                for(var i=0;i<count;i++)
+                                    $('#ddlUserRole').append(new Option(data.UserRoles[i].User_Role_Name,data.UserRoles[i].User_Role_Id));
+                            }
+                            else
+                            {
+                                $('#ddlUserRole').append(new Option('Choose User Role',''));
+                            }
+                        }
+                    },
+                    error:function(err)
+                    {
+                        alert('Error! Please try again');
+                        return false;
+                    }
+                });
+                return false;
+            }
+        
+            function add_popup_message(){
+                console.log($('#ddlCenter').val().toString());
+                
+                
+               var URL=$('#hdn_web_url').val()+ "/add_user_details";
+                   $.ajax({
+                       type:"POST",
+                       url:URL,
+                       data:{
+                           "UserRole" : $('#ddlUserRole').val(),
+                           "isactive" : $('#isactive').prop('checked'),
+                           "FirstName":$('#FirstName').val(),
+                           "LastName":$('#LastName').val(),
+                           "Email":$('#Email').val(),
+                           "MobileNumber":$('#MobileNumber').val(),
+                           "CenterId":$("#ddlCenter").val().toString(),
+                           "IsReportingManager":$('#isReportingManager').prop('checked')
+                       },
+                       success:function(data){
+                           if(data!=null)
+                           {
+                               let SwalIcon,SwalText,SwalTitle;
+                            if(data.PopupMessage.UserId==0)
+                            {
+                                SwalIcon="error";
+                                SwalText=data.PopupMessage.message;
+                                SwalTitle="Error";
+                            }
+                            else
+                            {
+                                SwalIcon="success";
+                                SwalText=data.PopupMessage.message+" Successfully !!";
+                                SwalTitle=data.PopupMessage.message;
+                            }
+                            swal({   title:SwalTitle,
+                                    text:SwalText,
+                                    icon:SwalIcon,
+                                    confirmButtonClass:"btn btn-confirm mt-2"
+                                    }).then(function(){
+                                        window.location.href = '/after_popup_user';
+                                    }
+                                    );
+                           }
+                           else
+                            alert("No data received");
+                       },
+                       error:function(x){
+                           alert('error');
+                       }
+                   });
+          
+           }
+
+        </script>
+                <div class="container-fluid">
+                    <form action="javascript:add_popup_message()">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/user">Users</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Users</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Users Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Users Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="FirstName">First Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="FirstName" id="FirstName" required placeholder="First name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="LastName">Last Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="LastName" id="LastName" required placeholder="Last name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="Email">Email *</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <input type="email" id="Email" name="Email" class="form-control" required placeholder="Email">
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="MobileNumber">Mobile Number *</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <input type="number" maxlength="10" min=0 id="MobileNumber" name="MobileNumber" class="form-control" 
+                                                        required placeholder="Mobile Number" 
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="ddlUserRole">User Role *:</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select id="ddlUserRole" class="form-control dropdown-search-filter" name="UserRole" ClientIdMode="static" required="">
+                                                        <option value="">Choose User Role</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="ddlCenter">Center :</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select id="ddlCenter" class="form-control dropdown-search-filter" data-live-search="true" multiple  name="CenterId" ClientIdMode="static">
+                                                        <option value="">Choose Center</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+                                       
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Reporting Manager :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isReportingManager" id="isReportingManager" ClientIdMode="static" 
+                                                                    value="1" data-parsley-mincheck="1" >
+                                                    <label for="isReportingManager"> Is Reporting Manager </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit" ClientIdMode="static">Save</button>
+                                    </div>
+    
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
+       

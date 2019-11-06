@@ -1,0 +1,96 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+        
+         <!-- third party css -->
+         <link href="static/assets/libs/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+         <!-- third party css end -->
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/libs/datatables/responsive.dataTables.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <form id='form1' method="POST" action="/assign_cluster_add_edit_to_home">
+            
+                <input type="hidden" id="hdn_cluster_id" name="hdn_cluster_id" value="0">
+                <div class="container-fluid">
+    
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item active">Cluster</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Cluster</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title -->
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <h4 class="header-title">Cluster List</h4>
+                                        </div>
+                                        <div class="col-lg-6" >                                        
+                                                <button style="float: right" type="submit" id="btn_create" class="btn btn-primary">Create Cluster</a>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="col-lg-12">
+                                        <table id="tbl_cluster" class="table dt-responsive nowrap" >
+                                            <thead>
+                                                <tr>
+                                                    <th>S No</th>                                                 
+                                                    <th>Actions</th>
+                                                    <th>Cluster Name</th>
+                                                    <th>Cluster Code</th>
+                                                    <th>Region</th>
+                                                    <th>Status</th>  
+                                                </tr>
+                                            </thead>
+                                        
+                                        <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+                        </div><!-- end col-->
+                    </div>
+                    <!-- end row-->    
+                </div> <!-- end container -->
+            
+            <!-- end wrapper -->
+        </form>
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+        <!-- Footer Start -->
+        
+
+        <!-- third party js -->
+        <script src="static/assets/libs/datatables/jquery.dataTables.min.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.bootstrap4.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.responsive.min.js"></script>
+        <script src="static/assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.buttons.min.js"></script>
+        <script src="static/assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+        <script src="static/assets/libs/datatables/buttons.html5.min.js"></script>
+        <script src="static/assets/libs/datatables/buttons.flash.min.js"></script>
+        <script src="static/assets/libs/datatables/buttons.print.min.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.keyTable.min.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.select.min.js"></script>
+        <script src="static/assets/libs/datatables/dataTables.responsive.min.js"></script>
+        <!-- third party js ends -->
+
+        <!-- datatables init js-->
+        <script src="static/assets/js/pages/cluster-list.js"></script>
+
+  

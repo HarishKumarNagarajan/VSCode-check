@@ -1,0 +1,418 @@
+
+        <script src="static/jquery-3.4.1.min.js"></script>
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="static/images/favicon.png">
+        <link href="static/css/datatables.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="static/css/select2.min.css"/>   
+
+        <script>  
+            var varEmail = '{{data[0]}}';
+			var varBatchId = '{{data[1]}}';
+			var var_trainer_name = '{{data[2]}}';
+			var var_batch_code = '{{data[3]}}';
+			var var_batch_period = '{{data[4]}}';
+			var var_center_name = '{{data[5]}}';
+			var var_course_name = '{{data[6]}}';
+			
+			
+			var varAttendanceImagePath = 'http://neolive.southindia.cloudapp.azure.com:27072/data/attendance_images/';
+            var varTable = null;
+            var varSessionStatus = 1;
+            var varActiveUserEmail = 'admin@labournet.in';
+			
+
+            $(document).ready(function() 
+            { 
+				
+                varTable = $("#tblCandidateAttendance").DataTable({
+                    "aLengthMenu": [[5, -1], [5, "All"]],
+                    "pageLength": 5
+                });
+
+                $("#imgSpinner").hide();
+
+                if (varSessionStatus != '1')
+                {
+                    window.location.href = "<?= BASE_URL ?>";
+                }
+                else
+                {
+                    $("#lblActiveUserEmail").text(varActiveUserEmail);
+                }
+            });
+
+            function ViewSessionAttendanceDetails(BatchId, SessionId, SessionName)
+            {
+                $("#imgSpinner").show();
+                $("#tblDetailsBody").empty();
+                $("#hdrCandidateAttendanceTitle").text("Attendance of session : " + SessionName);
+                $("#divCandidateAttendance").modal({ show: true });
+
+                //BatchId = 212035;
+                //SessionId = 461;
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        batch_id : BatchId,
+                        session_id : SessionId
+                    },
+                    dataType: "json",
+                    url: $('#hdn_web_url').val() + "/get_candidate_attendance",
+                    success: function(resp) 
+                    {
+                        if (varTable != null) varTable.clear().destroy();
+
+                        var varHtml = '';
+                        for(var i=0; i<resp.length; i++)
+                        {
+                            varHtml += '<tr>';
+                            varHtml += '    <td style="text-align:center;">' + (i+1) + '</td>';
+                            varHtml += '    <td style="text-align:left;">' + resp[i][0] + '</td>';
+                            varHtml += '    <td style="text-align:left;">' + resp[i][1] + '</td>';
+                            varHtml += '    <td style="text-align:left;">' + resp[i][3] + '</td>';
+                            varHtml += '    <td style="text-align:left;">' + resp[i][4] + '</td>';
+                            varHtml += '    <td style="text-align:left;">' + resp[i][5] + '</td>';
+                            varHtml += '    <td style="text-align:center;">' + (resp[i][6] == null ? 'NA' : resp[i][6]) + '</td>';
+                            varHtml += '    <td style="text-align:center;">' + resp[i][7] + '</td>';
+                            varHtml += '    <td style="text-align:center;">' + (((resp[i][8] || 'NA') == 'NA') ? 'NA' : '<a href="' + varAttendanceImagePath + resp[i][6] + '" target="_blank" title="Open image in new tab"><img src="' + varAttendanceImagePath + resp[i].image_file_name + '" style="height:40px;width:60px;border:0px solid lightgray;"/></a>') + '</td>';
+                            varHtml += '</tr>';
+                        }
+                        
+                        $("#tblDetailsBody").html(varHtml);
+                        varTable = $("#tblCandidateAttendance").DataTable({ "aLengthMenu": [[5, -1], [5, "All"]], "pageLength": 5 });
+                        $("#imgSpinner").hide();
+                    },
+                    error: function()
+                    {
+                        $("#imgSpinner").hide();
+                    }
+                });
+            }
+
+            var varGroupAttendanceData = {};
+            var varGroupImageindex = 0;
+
+            function ViewSessionAttendanceGroupImages(BatchId, SessionId, SessionName)
+            {
+                $("#imgSpinner2").show();
+                $("#imgGroupImages").hide();
+
+                varGroupImageindex = 0;
+                varGroupAttendanceData = {};
+                
+                $("#hdrGroupImageTitle").text("Group Attendance Images of session : " + SessionName);
+                $("#divGroupAttendanceImages").modal({ show: true });
+
+                //BatchId = 212035;
+                //SessionId = 653;
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        batch_id : BatchId,
+                        session_id : SessionId
+                    },
+                    dataType: "json",
+                    url: $('#hdn_web_url').val() + "/get_candidate_group_attendance",
+                    success: function(resp) 
+                    {
+                        if (resp.length > 0)
+                        {
+                            varGroupAttendanceData = resp;
+                            $("#imgInfo").text('Showing image 1 of ' + varGroupAttendanceData.length);
+                            $("#imgGroupImages").show();
+                            $("#imgGroupImages").attr('src', (varAttendanceImagePath + varGroupAttendanceData[varGroupImageindex][0]));
+                        }
+                        else
+                        {
+                            $("#imgInfo").text('No Images found for this session!');                            
+                        }
+
+                        $("#imgSpinner2").hide();
+                    },
+                    error: function()
+                    {
+                        $("#imgSpinner2").hide();
+                    }
+                });
+            }
+
+            function ShowImage(imgPosition)
+            {
+                if (varGroupAttendanceData.length > 0)
+                {
+                    switch(imgPosition)
+                    {
+                        case "FIRST":
+                            if (varGroupAttendanceData.length > 0) varGroupImageindex = 0;
+                            break;
+
+                        case "PREVIOUS":
+                            if (varGroupImageindex > 0) varGroupImageindex--;
+                            break;
+
+                        case "NEXT":
+                            if (varGroupImageindex < (varGroupAttendanceData.length - 1)) varGroupImageindex++;
+                            break;
+
+                        case "LAST":
+                            if (varGroupAttendanceData.length > 0) varGroupImageindex = (varGroupAttendanceData.length - 1);
+                            break;
+                    }
+
+                    $("#imgInfo").text('Showing image ' + (varGroupImageindex + 1) + ' of ' + varGroupAttendanceData.length);
+                    $("#imgGroupImages").attr('src', (varAttendanceImagePath + varGroupAttendanceData[varGroupImageindex][0]));
+                }
+            }
+
+            function OpenGroupImageInNewTab(imgSrc)
+            {
+                if (imgSrc != '')
+                {
+                    var win = window.open(imgSrc, '_blank');
+                    win.focus();
+                }
+            }
+			
+			
+			
+        </script>
+   
+
+    
+        <!-- Navigation Bar-->
+        <!-- End Navigation Bar-->
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+
+        <div class="wrapper">
+            <div class="container-fluid">
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box"  style="margin-top:20px;">
+                            <h4 class="page-title" style="line-height: 50px;margin-top: -10px;">Trainer Sessions</h4>
+                        </div>
+                        <div class="card">
+                            <div class="card-body"> 
+                                <div class="col-md-12">                                
+                                    <div class="col-md-4 form-group">
+                                        <h5>Trainer Name</h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -38px; margin-left: 10%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[2]}}'  disabled/>                               
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 form-group" style="margin-top: -45px; margin-left: 45%;">
+                                        <h5>Trainer Email</h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -42px; margin-left: 55%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[0]}}'  disabled/>                               
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">                                
+                                    <div class="col-md-4 form-group">
+                                        <h5>Batch Code</h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -38px; margin-left: 10%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[3]}}'  disabled/>                               
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 form-group" style="margin-top: -45px; margin-left: 45%;">
+                                        <h5>Batch Period </h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -42px; margin-left: 55%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[4]}}'  disabled/>                                
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">                                
+                                    <div class="col-md-4 form-group">
+                                        <h5>Center Name</h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -38px; margin-left: 10%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[5]}}' disabled />                               
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 form-group" style="margin-top: -45px; margin-left: 45%;">
+                                        <h5>Course Name</h5>                                           
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -42px; margin-left: 55%;">
+                                        <div class="form-group" style="margin-bottom: 20px;">        
+                                            <input type="text" class="form-control" value='{{data[6]}}'  disabled/>                                
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end card-body -->
+                        </div> <!-- end card-->
+                    </div>
+                </div>     
+                <!-- end page title --> 
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="header-title" style="margin-bottom:10px;">Trainer Session List</h4>
+                                <hr style="margin-left: -25px;margin-right: -25px;">
+                                <div style="overflow-x:auto;">
+								
+                                    <table id="tblList" class="table table-bordered dt-responsive nowrap" style="border-color: lightgray;width:100% !important;">
+                                        <thead>
+                                            <tr style="background-color: #f5f6f8;">
+                                                <th rowspan="2" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Sno</th>
+                                                <th rowspan="2" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Actions</th>
+                                                <th rowspan="2" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Session</th>
+                                                <th colspan="3" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Session Start</th>
+                                                <th colspan="3" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Ongoing Session</th>
+                                                <th colspan="3" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Mark Attendance</th>
+                                                <th colspan="3" style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Session Complete</th>
+                                            </tr>
+                                            <tr style="background-color: #f5f6f8;">
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Log Date Time</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Image</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Location</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Log Date Time</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Stage Image</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Location</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Log Date Time</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Stage Image</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Location</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Log Date Time</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Stage Image</th>
+                                                <th style="border-bottom-color: lightgray;vertical-align:middle;text-align:center;">Location</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+											abcdefghijklmnopqrstuvwxy								
+										</tbody>
+										
+										
+                                    </table>
+                                </div>
+                            </div> <!-- end card body-->
+                        </div> <!-- end card -->
+                    </div><!-- end col-->
+
+                    <!-- Modal -->
+                    <div id="divCandidateAttendance" class="modal fade" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-lg" style="margin-left: 10px;">                    
+                            <!-- Modal content-->
+                            <div class="modal-content" style="width:168%;max-height:500px;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="hdrCandidateAttendanceTitle">Trainer Session Details</h5>
+                                    <div style="float: right;"> 
+                                        <img id="imgSpinner" src="static/images/spinner1.gif" style="height:20px;display:none;"/>
+                                        <button type="button" class="close" data-dismiss="modal" title="Exit Attendance">&times;</button>                            
+                                    </div>
+                                </div>
+                                <div class="modal-body" style="overflow-y:auto;">
+                                    <div class="col-md-12" >                                
+                                        <table id="tblCandidateAttendance" class="table table-bordered dt-responsive nowrap">
+                                            <thead>
+                                                <tr style="background-color: #f5f6f8;">
+                                                    <th style="text-align:center;">Sno</th>
+                                                    <th style="text-align:left;">Candidate Name</th>
+                                                    <th style="text-align:left;">Enrollment ID</th>
+                                                    <th style="text-align:left;">Phone</th>
+                                                    <th style="text-align:left;">Gender</th>
+                                                    <th style="text-align:left;">Date Of Birth</th>
+                                                    <th style="text-align:center;">Attendance Date</th>
+                                                    <th style="text-align:center;">Attendance</th>
+                                                    <th style="text-align:center;">Image</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tblDetailsBody"> 
+											
+                                            </tbody>
+                                        </table>
+                                    </div>                                     
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger" data-dismiss="modal" title="Exit Attendance"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div id="divGroupAttendanceImages" class="modal fade" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-lg" style="margin-left: 15%;">                    
+                            <!-- Modal content-->
+                            <div class="modal-content" style="width:120%;max-height:550px;top:-10px;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="hdrGroupImageTitle">Group Attendance Images</h5>
+                                    <div style="float: right;"> 
+                                        <img id="imgSpinner2" src="static/images/spinner1.gif" style="height:20px;display:none;"/>
+                                        <button type="button" class="close" data-dismiss="modal" title="Exit Gallery">&times;</button>                            
+                                    </div>
+                                </div>
+                                <div class="modal-body">                                    
+                                    <div class="col-md-12" > 
+                                        <center>
+                                            <h5 id="imgInfo">No images found for this session!</h5>                               
+                                            <a title="Open image in new tab"><img id="imgGroupImages" src="" style="min-height:50px;min-width:50px;max-height:350px;max-width:900px;border:1px solid lightgray;cursor:pointer;" onclick="OpenGroupImageInNewTab(this.src)"/></a>
+                                        </center>
+                                    </div>                                     
+                                </div>
+                                <div style="padding: 1rem; border-top:1px solid #dee2e6; border-bottom-right-radius:.2rem; border-bottom-left-radius:.2rem;text-align: center;">
+                                    <button class="btn btn-primary" title="Show first image" onclick="ShowImage('FIRST')">First</button>
+                                    <button class="btn btn-success" title="Show previous image" onclick="ShowImage('PREVIOUS')">Previous</button>
+                                    <button class="btn btn-success" title="Show next image" onclick="ShowImage('NEXT')">Next</button>
+                                    <button class="btn btn-primary" title="Show last image" onclick="ShowImage('LAST')">Last</button>
+                                    <button class="btn btn-danger" data-dismiss="modal" title="Exit Gallery"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>
+                </div>
+                <!-- end row-->                
+            </div> <!-- end container -->
+        </div>
+        <!-- end wrapper -->
+
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= date("Y") ?> &copy; TMA
+                    </div>                   
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->       
+
+        <!-- Vendor js -->
+        <script src="static/js/vendor.min.js"></script>
+
+        <!-- Plugins js-->       
+        <script src="static/js/datatables.min.js"></script>
+        <script src="static/libs/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+        <script type="text/javascript" src="static/js/select2.min.js"></script>
+
+        <!-- App js-->
+        <script src="static/js/app.min.js"></script>        

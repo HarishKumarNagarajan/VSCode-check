@@ -1,0 +1,164 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if('{{client_id}}' !=0)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetClientDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.ClientDetail!="")
+                               {
+                                   $('#ClientName').val(data.ClientDetail.Client_Name);
+                                   $('#ClientCode').val(data.ClientDetail.Client_Code);
+                                   if(data.ClientDetail.Is_Active)
+                                        $('#isactive').prop('checked',true);
+                                    else
+                                        $('#isactive').prop('checked',false);
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+            function add_popup_message(){
+                var URL=$('#hdn_web_url').val()+ "/add_client_details";
+                    $.ajax({
+                        type:"POST",
+                        url:URL,
+                        data:{
+                            "ClientName" : $('#ClientName').val(),
+                            "ClientCode" : $('#ClientCode').val(),
+                            "isactive" : $('#isactive').prop('checked')
+                        },
+                        success:function(data){
+                            var message="",title="",icon="";
+                    if(data.PopupMessage.client_flag==2){
+                        message=data.PopupMessage.message;
+                        title="Error";
+                        icon="error";
+                    }
+                    else{
+                        message=data.PopupMessage.message;
+                        title="Success";
+                        icon="success";
+                    }
+                    swal({   
+                                title:title,
+                                text:message,
+                                icon:icon,
+                                confirmButtonClass:"btn btn-confirm mt-2"
+                                }).then(function(){
+                                    window.location.href = '/after_popup_client';
+                                });
+                        //    alert("The Inserted/Upadated Id is "+data.PopupMessage.message);
+                        //    window.location.href="/after_popup"; 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+            }
+        </script>
+                <div class="container-fluid">
+                    <form action="javascript:add_popup_message();">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/client">Customer</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Customer</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Customer Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Customer Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ClientName">Customer Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" maxlength="25" class="form-control" name="ClientName" id="ClientName" required placeholder="Customer name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ClientCode">Customer Code * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" maxlength="25" class="form-control" name="ClientCode" id="ClientCode" required placeholder="Customer code">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="1" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+    
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit">Save</button>
+                                    </div>
+    
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
+       

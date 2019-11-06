@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<!-- Mirrored from coderthemes.com/ubold/layouts/light-horizontal/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 28 Aug 2019 07:51:07 GMT -->
+<head>
+        <meta charset="utf-8" />
+        <title>LN - Upload page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="static/assets/images/logo-dark.png">
+
+        <!-- Plugins css -->
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+
+
+
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            var goto = '{{html}}';
+            /*if( goto != "")
+            {
+                $("#box").load(goto);
+            }*/
+            if('{{values}}'!= "")
+            {
+                // $('#usernamelbl').val('{{values[0]}}');
+                $('#hdn_home_user_id').val('{{values[1]}}');
+                $('#hdn_home_user_role_id').val('{{values[2]}}');
+                $('#hdn_home_user_name').val('{{values[0]}}');
+            }
+            if(parseInt($('#hdn_home_user_role_id').val())>0)
+            {
+                var role_id=parseInt($('#hdn_home_user_role_id').val());
+                switch(role_id)
+                {
+                    case 1:         //Tech Admin
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 2:         //Mobilizer
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto !=""){
+                            if(goto == "batch_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                    case 3:         //Department Head
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 5:         //Center Manager
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto != ""){
+                            if(goto == "center_list_page" || goto == "ceter_type_list_page" || goto == "center_category_list_page" || goto == "batch_list_page" || goto == "user_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                    case 6:         //Super Admin
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 7:         //Trainer
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto !=""){
+                            if(goto == "batch_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                    case 8:         //Center Ops
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 9:         //Content Executive
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').hide();
+                        if(goto != ""){
+                            if(goto == "course_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+        
+        </script>
+    </head>
+
+    <body>
+            <input type="hidden" id="hdn_home_user_id" name="hdn_home_user_id" value="0">
+            <input type="hidden" id="hdn_home_user_role_id" name="hdn_home_user_role_id" value="0">
+            <input type="hidden" id="hdn_home_user_name" name="hdn_home_user_name" value="0">
+             <input type="hidden" id="hdn_web_url" name="hdn_web_url" value="http://neodevqa01.southindia.cloudapp.azure.com:27078" ><!--"http://127.0.0.1:5000"> -->
+        <!-- Navigation Bar-->
+        <header id="topnav">
+
+            <!-- Topbar Start -->
+            <div class="navbar-custom">
+                <div class="container-fluid">
+                    <ul class="list-unstyled topnav-menu float-right mb-0">
+
+                        <li class="dropdown notification-list">
+                            <!-- Mobile menu toggle-->
+                            <a class="navbar-toggle nav-link">
+                                <div class="lines">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </a>
+                            <!-- End mobile menu toggle-->
+                        </li>
+    
+    
+                        <li class="dropdown notification-list">
+                                
+                            <div class="dropdown-header">
+                               
+                            <a href="/log_out" class="dropdown-item notify-item">
+                                <i class="fe-log-out"></i>
+                                <span>Logout</span>
+                            </a>
+                            </div>
+                        </li>
+                    </ul>
+    
+                    <!-- LOGO -->
+                    <div class="logo-box">
+                        <a href="/home" class="logo text-center">
+                            <span class="logo-lg">
+                                <img src="static/assets/images/logo-dark.png" alt="" height="65">
+                                <!-- <span class="logo-lg-text-light">UBold</span> -->
+                            </span>
+                            <span class="logo-sm">
+                                <!-- <span class="logo-sm-text-dark">U</span> -->
+                                <img src="static/assets/images/logo-sm.png" alt="" height="24">
+                            </span>
+                        </a>
+                    </div>
+    
+                </div> <!-- end container-fluid-->
+            </div>
+            <!-- end Topbar -->
+
+            <div class="topbar-menu">
+                <div class="container-fluid">
+                    <div id="navigation">
+                        <!-- Navigation Menu-->
+                        <ul class="navigation-menu">
+
+                            <li class="has-submenu" id="Master_Menu">
+                                <a href="#">
+                                    <i class="fe-airplay"></i>Master <div class="arrow-down"></div></a>
+                                <ul class="submenu">
+                                    <li id="Client_Menu">
+                                        <a id="AnchorClients" hidden href="/client" >Clients</a>
+                                    </li>
+                                    <li id="Practicce_Menu">
+                                        <a id="AnchorPractices" hidden href="/practice">Practices</a>
+                                    </li>
+                                    <li id="Project_Menu">
+                                        <a id="AnchorProjects" hidden href="/project">Projects</a>
+                                    </li>
+                                    <li id="Center_Type_Menu">
+                                        <a id="AnchorCenterType" href="/center_type">Center Type</a>
+                                    </li>
+                                    <li id="Center_Category_Menu">
+                                        <a id="AnchorCenterCategory" href="/center_category">Center Category</a>
+                                    </li>
+                                    <li id="Center_Menu">
+                                        <a id="AnchorCenters" href="/center">Centers</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu"  id="Org_menu">
+                                <a href="#">
+                                    <i class="fe-grid"></i>User Management <div class="arrow-down"></div></a>
+                                <ul class="submenu">                                    
+                                    <li id="UserRole_Menu">
+                                        <a id="AnchorRoles" href="/user_role">User Roles</a>
+                                    </li>
+                                    <li id="Users_Menu">
+                                        <a id="AnchorUsers" href="/user">Users</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu" id="Content_Menu">
+                                <a href="#"> <i class="fe-briefcase"></i>Content <div class="arrow-down"></div></a>
+                                <ul class="submenu">
+                                    <li id="Course_Menu">
+                                        <a id="AnchorCourses" href="/course">Courses</a>
+                                    </li>
+                                    <li id="SectionType_Menu">
+                                        <a id="AnchorSectionTypes" hidden href="/section_type">Section Types</a>
+                                    </li>
+                                    <li id="Section_Menu">
+                                        <a id="AnchorSections" hidden>Sections</a>
+                                    </li>
+                                    <li id="QuestionType_Menu">
+                                        <a id="AnchorQuestionTypes" hidden href="/question_type">Question Types</a>
+                                    </li>
+                                    <li id="Question_Menu">
+                                        <a id="AnchorQuestions" hidden>Questions</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="has-submenu" id="Batch_Menu">
+                                <a href="/batch"> <i class="fe-cpu"></i>Batch<div class="button"></div></a>
+                            </li>
+
+                        </ul>
+                        <!-- End navigation menu -->
+
+                        <div class="clearfix"></div>
+                    </div>
+                    <!-- end #navigation -->
+                </div>
+                <!-- end container -->
+            </div>
+            <!-- end navbar-custom -->
+
+        </header>
+        <!-- End Navigation Bar-->
+
+        <!-- End Navigation Bar-->
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        
+        <div class="wrapper" id="box">
+                Data
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+        <!-- Footer Start -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                         &copy; Powered by <a href="https://www.labournet.in/">Labournet</a> 
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-md-right footer-links d-none d-sm-block">
+                            <!-- <a href="https://www.labournet.in/">About Us</a> -->
+                            <!-- <a href="javascript:void(0);">Help</a>
+                            <a href="javascript:void(0);">Contact Us</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
+        <!-- Right bar overlay-->
+        <div class="rightbar-overlay"></div>
+        
+        
+         <!-- App js-->
+         <script src="static/assets/js/app.min.js"></script>
+    </body>
+
+<!-- Mirrored from coderthemes.com/ubold/layouts/light-horizontal/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 28 Aug 2019 07:51:37 GMT -->
+</html>

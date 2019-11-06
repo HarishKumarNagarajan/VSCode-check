@@ -1,0 +1,145 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if('{{section_type_id}}' !=0)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetSectionTypeDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.SectionTypeDetail!="")
+                               {
+                                   //alert(data.ProjectDetail.Project_Name);
+                                   $('#SectionTypeName').val(data.SectionTypeDetail.Section_Type_Name);
+                                   if(data.SectionTypeDetail.Is_Active)
+                                   {
+                                        $('#isactive').prop('checked',true);
+                                    }
+                                    else
+                                    {
+                                        $('#isactive').prop('checked',false);
+                                    }
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+            function add_popup_message(){
+                var URL=$('#hdn_web_url').val()+ "/add_section_type_details";
+                    $.ajax({
+                        type:"POST",
+                        url:URL,
+                        data:{
+                            "SectionTypeName" : $('#SectionTypeName').val(),
+                            "isactive" : $('#isactive').prop('checked'),
+							"SectionTypeId":'{{section_type_id}}'
+                        },
+                        success:function(data){
+                            swal({   title:data.PopupMessage.message,
+                                    text:data.PopupMessage.message+" Successfully !!",
+                                    icon:"success",
+                                    confirmButtonClass:"btn btn-confirm mt-2"
+                                    }).then(function(){
+                                        window.location.href = '/after_popup_section_type';
+                                    }
+                                    );
+                        //    alert("The Inserted/Upadated Id is "+data.PopupMessage.message);
+                        //    window.location.href="/after_popup"; 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+            }
+        </script>
+                <div class="container-fluid">
+                    <form action="javascript:add_popup_message();">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/section_type">Section Types</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Section Type</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Section Type Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Section Type Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="SectionTypeName">Section Type Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="SectionTypeName" id="SectionTypeName" required placeholder="Section Type name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="1" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+    
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit">Save</button>
+                                    </div>
+    
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>

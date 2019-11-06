@@ -1,0 +1,127 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if('{{client_id}}' !=0)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetClientDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.ClientDetail!="")
+                               {
+                                   $('#ClientName').val(data.ClientDetail.Client_Name);
+                                   $('#ClientCode').val(data.ClientDetail.Client_Code);
+                                   if(data.ClientDetail.Is_Active)
+                                        $('#isactive').prop('checked',true);
+                                    else
+                                        $('#isactive').prop('checked',false);
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+
+        </script>
+                <div class="container-fluid">
+                    <form  method="POST" action="/add_client_details">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/client">Clients</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Client</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Client Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Client Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ClientName">Client Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="ClientName" id="ClientName" required placeholder="Client name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ClientCode">Client Code * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="ClientCode" id="ClientCode" required placeholder="Client code">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active *:</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="1" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+    
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit">Save</button>
+                                    </div>
+    
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
+       

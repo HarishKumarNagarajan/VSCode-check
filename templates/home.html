@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<!-- Mirrored from coderthemes.com/ubold/layouts/light-horizontal/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 28 Aug 2019 07:51:07 GMT -->
+<head>
+        <meta charset="utf-8" />
+        <title>NEO - LabourNet</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="static/assets/images/logo-light.png">
+
+        <!-- Plugins css -->
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+
+
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+        
+        <script type="text/javascript" src="static/assets/js/slimscroll.min.js"></script>
+        <script type="text/javascript" src="static/assets/js/waves.js"></script>
+
+        
+
+
+        
+        <script type="text/javascript">
+        $(document).ready(function(){
+            var goto = '{{html}}';
+            /*if( goto != "")
+            {
+                $("#box").load(goto);
+            }*/
+            if('{{values}}'!= "")
+            {
+                // $('#usernamelbl').val('{{values[0]}}');
+                $('#hdn_home_user_id').val('{{values[1]}}');
+                $('#hdn_home_user_role_id').val('{{values[2]}}');
+                $('#hdn_home_user_name').val('{{values[0]}}');
+            }
+            if(parseInt($('#hdn_home_user_role_id').val())>0)
+            {
+                var role_id=parseInt($('#hdn_home_user_role_id').val());
+                switch(role_id)
+                {
+                    case 1:         //Tech Admin
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 2:         //Mobilizer
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto !=""){
+                            if(goto == "batch_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                    case 3:         //Department Head
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 5:         //Center Manager
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto != ""){
+                            if(goto == "center_list_page" || goto == "ceter_type_list_page" || goto == "center_category_list_page" || goto == "batch_list_page" || goto == "user_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                    case 6:         //Super Admin
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 7:         //Trainer
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').hide();
+                        $('#AnchorCourses').hide();
+                        $('#Batch_Menu').show();
+                        if(goto !=""){
+                            //if(goto == "batch_list_page"){
+                                $("#box").load(goto);
+                            //}
+                        }
+                        break;
+                    case 8:         //Center Ops
+                        $('#Master_Menu').show();
+                        $('#AnchorCenters').show();
+                        $('#AnchorCenterType').show();
+                        $('#AnchorCenterCategory').show();
+                        $('#Org_menu').show();
+                        $('#AnchorRoles').show();
+                        $('#AnchorUsers').show();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').show();
+                        if(goto !="")
+                            $("#box").load(goto);
+                        break;
+                    case 9:         //Content Executive
+                        $('#Master_Menu').hide();
+                        $('#AnchorCenters').hide();
+                        $('#AnchorCenterType').hide();
+                        $('#AnchorCenterCategory').hide();
+                        $('#Org_menu').hide();
+                        $('#AnchorRoles').hide();
+                        $('#AnchorUsers').hide();
+                        $('#Content_Menu').show();
+                        $('#AnchorCourses').show();
+                        $('#Batch_Menu').hide();
+                        if(goto != ""){
+                            if(goto == "course_list_page"){
+                                $("#box").load(goto);
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+        
+        </script>
+    </head>
+
+    <body>
+            <input type="hidden" id="hdn_home_user_id" name="hdn_home_user_id" value="0">
+            <input type="hidden" id="hdn_home_user_role_id" name="hdn_home_user_role_id" value="0">
+            <input type="hidden" id="hdn_home_user_name" name="hdn_home_user_name" value="0">
+            <input type="hidden" id="hdn_web_url" name="hdn_web_url" value="http://127.0.0.1:5000">
+            <!-- http://neodevqa01.southindia.cloudapp.azure.com:27078 -->
+			<!--   value="http://neodevqa01.southindia.cloudapp.azure.com:27070"   Demo   -->   
+			<!--   value="http://10.0.0.5:27070"   Local   -->
+			<!--value="http://localhost:27071" -->
+        <!-- Navigation Bar-->
+        <header id="topnav" style="background-color:#1C2A43;min-height: 10%; font-size: 15px;" >
+
+            <!-- Topbar Start -->
+            <div class="navbar-custom" style="background-color: white;max-height: 12%;"><!--#e3e8e5;" >-->
+                <div class="container-fluid">
+                    <ul class="list-unstyled topnav-menu float-right mb-0">
+
+                        <li class="dropdown notification-list">
+                            <!-- Mobile menu toggle -->
+                            <a class="navbar-toggle nav-link">
+                                <div class="lines">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </a>
+                            <!-- End mobile menu toggle -->
+                        </li>
+    
+    
+                        <ul  class="navigation-menu in">
+                        <li class="has-submenu active" >
+                            <a href="#" class="active">
+                                    <span style="color: black;"><i class="fe-user"></i>{{values[0]}}</span><div class="arrow-down"></div></a>
+                            <ul class="submenu">                                    
+                                <li id="UserRole_Menu">
+                                        <a href="/log_out" ><i class="fe-log-out"></i>Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        </ul>
+                    </ul>
+    
+                    <!-- LOGO -->
+                    <div class="logo-box">
+                        <a href="/home" class="logo text-center">
+                            <span class="logo-lg">
+                                <img src="static/assets/images/logo-dark.png" alt="" height="65">
+                                <!-- <span class="logo-lg-text-light">UBold</span> -->
+                            </span>
+                            <span class="logo-sm">
+                                <!-- <span class="logo-sm-text-dark">U</span> -->
+                                <img src="static/assets/images/logo-dark.png" alt="" height="24">
+                            </span>
+                        </a>
+                    </div>
+                    
+                </div> <!-- end container-fluid-->
+            </div>
+            <!-- end Topbar -->
+
+            <div class="topbar-menu">
+                <div class="container-fluid">
+                    <div  id="navigation" class="active" style="display: none;">
+                        <!-- Navigation Menu-->
+                    <!-- <ul class="navbar-toggle nav-link"> -->
+                        <ul  class="navigation-menu in">
+
+                            <li class="has-submenu active" id="Master_Menu">
+                                <a href="#" class="active">
+                                    <i class="fe-anchor"></i>Master <div class="arrow-down"></div></a>
+                                <ul class="submenu">
+                                    <li id="Client_Menu">
+                                        <a id="AnchorClients"  href="/client" >Customers</a>
+                                    </li>
+                                    <li id="Practicce_Menu">
+                                        <a id="AnchorPractices" hidden href="/practice">Practices</a>
+                                    </li>
+                                    <li id="Project_Menu">
+                                        <a id="AnchorProjects" hidden href="/project">Projects</a>
+                                    </li>
+                                    <li id="Center_Type_Menu">
+                                        <a id="AnchorCenterType" href="/center_type">Center Type</a>
+                                    </li>
+                                    <li id="Center_Category_Menu">
+                                        <a id="AnchorCenterCategory" href="/center_category">Center Category</a>
+                                    </li>
+                                    <li id="Center_Menu">
+                                        <a id="AnchorCenters" href="/center">Centers</a>
+                                    </li>
+                                    <li id="Region_Menu">
+                                        <a id="AnchorRegion" href="/region">Region</a>
+                                    </li>
+                                    <li id="Cluster_Menu">
+                                        <a id="AnchorCluster" href="/cluster">Cluster</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu active"  id="Org_menu">
+                                <a href="#" class="active">
+                                    <i class="fe-users"></i>User Management <div class="arrow-down"></div></a>
+                                <ul class="submenu">                                    
+                                    <li id="UserRole_Menu">
+                                        <a id="AnchorRoles" href="/user_role">User Roles</a>
+                                    </li>
+                                    <li id="Users_Menu">
+                                        <a id="AnchorUsers" href="/user">Users</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu active" id="Content_Menu">
+                                <a href="#" class="active"> <i class="fe-briefcase"></i>Content <div class="arrow-down"></div></a>
+                                <ul class="submenu">
+                                    <li id="Course_Menu">
+                                        <a id="AnchorCourses" href="/course">Courses</a>
+                                    </li>
+                                    <li id="Section_Menu">
+                                        <a id="AnchorSections" hidden>Sections</a>
+                                    </li>
+                                    <li id="Question_Menu">
+                                        <a id="AnchorQuestions" hidden>Questions</a>
+                                    </li>
+                                    <li id="QP_Menu">
+                                        <a id="AnchorQP" href="/qp">Qualification Pack</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            
+                            <li class="has-submenu active"  id="MCL_menu">
+                                <a href="#" class="active">
+                                    <i class="fe-airplay"></i>MCL <div class="arrow-down"></div></a>
+                                <ul class="submenu">                                    
+                                    <li class="has-submenu"  id="Org_content">
+                                        <a href="#">
+                                            <i class="fe-briefcase"></i> Content <div class="arrow-down"></div></a>
+                                        <ul class="submenu">                                    
+                                            <li id="QuestionType_Menu">
+                                                <a id="AnchorQuestionTypes" href="/question_type">Question Types</a>
+                                            </li>
+											<li id="Section_Menu">
+                                                <a id="AnchorSections" href="/section">Sections</a>
+                                            </li>
+                                            <li id="SectionType_Menu">
+                                                <a id="AnchorSectionTypes" href="/section_type">Section Types</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+									<li  id="MCL_report_Menu">
+										<a href="/mcl_report" class="active"> Report<div class="button"></div></a>
+									</li>
+                                </ul>
+                            </li>
+
+                            <li class="has-submenu active" id="Batch_Menu">
+                                    <a id="AnchorBatch" href="/batch"  class="active"> <i class="fe-tag"></i>Batch<div class="button"></div></a>
+                            </li>
+                                
+                            <li class="has-submenu active" id="Candidate_Menu">
+                                <a href="/candidate" class="active"> <i class="fe-user"></i>Candidate<div class="button"></div></a>
+                            </li>
+							<li class="has-submenu active"  id="TMA_menu">
+                                <a href="#" class="active">
+                                    <i class="fe-airplay"></i>TMA <div class="arrow-down"></div></a>
+                                <ul class="submenu">                                    
+                                             <li  id="TMA_batch_Menu">
+												<a href="/tma_batch" class="active"> Batch <div class="button"></div></a>
+											</li> 
+                                           <li  id="TMA_report_Menu">
+												<a href="/tma_report" class="active"> Report<div class="button"></div></a>
+											</li>
+                                            
+                                        </ul>
+                                    
+                            </li>
+							
+                        </ul>
+                        <!-- End navigation menu -->
+                    <!-- </ul> -->
+                        <div class="clearfix"></div>
+                    </div>
+                    <!-- end #navigation -->
+                </div>
+                <!-- end container -->
+            </div>
+            <!-- end navbar-custom -->
+
+        </header>
+        <!-- End Navigation Bar-->
+
+        <!-- End Navigation Bar-->
+
+        <!-- ============================================================== -->
+        <!-- Start Page Content here -->
+        <!-- ============================================================== -->
+        
+        <div class="wrapper" id="box">
+            Data
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page content -->
+        <!-- ============================================================== -->
+
+        <!-- Footer Start -->
+        <footer class="footer" style="background-color: #1C2A43; font-size: 14px;position:fixed;max-height: 6%; color: white;">
+            <div class=" container-fluid"  style="padding: 0%;" >
+                         &copy; Powered by <a style="color: chartreuse;" href="https://www.labournet.in/">Labournet</a> 
+                    <!-- <div class="col-md-6">
+                        <div class="text-md-right footer-links d-none d-sm-block">
+                             <a href="https://www.labournet.in/">About Us</a> 
+                            <a href="javascript:void(0);">Help</a>
+                            <a href="javascript:void(0);">Contact Us</a> 
+                        </div>
+                    </div> -->
+            </div>
+        </footer>
+        
+        
+         <!-- App js-->
+         <script src="static/assets/js/app.min.js"></script>
+    </body>
+
+<!-- Mirrored from coderthemes.com/ubold/layouts/light-horizontal/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 28 Aug 2019 07:51:37 GMT -->
+</html>

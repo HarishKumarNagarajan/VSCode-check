@@ -1,0 +1,144 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="static/assets/libs/jquery/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                if('{{center_category_id}}' !=0)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetCenterCategoryDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.CenterCategoryDetail!="")
+                               {
+                                   $('#CenterCategoryName').val(data.CenterCategoryDetail.Center_Category_Name);
+                                   if(data.CenterCategoryDetail.Is_Active){
+                                        $('#isactive').prop('checked',true);
+                                   }
+                                    else{
+                                        $('#isactive').prop('checked',false);
+                                    }
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+            function add_popup_message(){
+                var URL=$('#hdn_web_url').val()+ "/add_center_category_details";
+                    $.ajax({
+                        type:"POST",
+                        url:URL,
+                        data:{
+                            "CenterCategoryName" : $('#CenterCategoryName').val(),
+                            "isactive" : $('#isactive').prop('checked'),
+							"CenterCategoryId": '{{center_category_id}}'
+                        },
+                        success:function(data){
+                            swal({   title:data.PopupMessage.message,
+                                    text:data.PopupMessage.message+" Successfully !!",
+                                    icon:"success",
+                                    confirmButtonClass:"btn btn-confirm mt-2"
+                                    }).then(function(){
+                                        window.location.href = '/after_popup_center_category';
+                                    }
+                                    );
+                        //    alert("The Inserted/Upadated Id is "+data.PopupMessage.message);
+                        //    window.location.href="/after_popup"; 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+            }
+
+        </script>
+                <div class="container-fluid">
+                    <form action="javascript:add_popup_message();"> <!--method="POST" action="/add_center_category_details"-->
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/center_category">Center Category</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Center Category</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Center Category Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Center Category Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="CenterCategoryName">Center Category Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="CenterCategoryName" id="CenterCategoryName" required placeholder="Center Category name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="1" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+    
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit" >Save</button>
+                                    </div>
+    
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>
+       

@@ -1,0 +1,220 @@
+<link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+<link href="static/assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/libs/clockpicker/bootstrap-clockpicker.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+<!-- App css -->
+
+<script type="text/javascript">
+        $(document).ready(function(){
+            LoadPractice();
+            $('.dropdown-search-filter').select2();
+            $(".date-picker").flatpickr();             
+            $(".time-picker").flatpickr({
+                enableTime: !0,
+                noCalendar: !0,
+                dateFormat: "H:i",
+                time_24hr:  !0
+                });
+        });
+        
+function LoadPractice()
+{
+    var URL=$('#hdn_web_url').val()+ "/PracticeBasedOnUser"
+    $.ajax({
+        type:"GET",
+        url:URL,
+        async:false,        
+        beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+        datatype:"json",
+        success: function (data){
+            if(data.Pratices != null)
+            {
+                $('#ddlPractice').empty();
+                var count=data.Pratices.length;
+                if( count> 0)
+                {
+                    $('#ddlPractice').append(new Option('Choose Practice',''));
+                    for(var i=0;i<count;i++)
+                        $('#ddlPractice').append(new Option(data.Pratices[i].Practice_Name,data.Pratices[i].Practice_Id));
+                }
+                else
+                {
+                    $('#ddlPractice').append(new Option('Choose Practice',''));
+                }
+            }
+        },
+        error:function(err)
+        {
+            alert('Error! Please try again');
+            return false;
+        }
+    });
+    return false;
+}
+
+function CourseBasedOnUserPractice(Practice_Id){
+    if(Practice_Id != ''){
+    var URL=$('#hdn_web_url').val()+ "/CourseBasedOnUserPractice"
+    $.ajax({
+        type:"POST",
+        url:URL,
+        async:false,        
+        beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+        datatype:"json",
+        data:{
+            'PracticeId': Practice_Id
+        },
+        success: function (data){
+            if(data.Courses != null)
+            {
+                $('#ddlCourse').empty();
+                var count=data.Courses.length;
+                if( count> 0)
+                {
+                    $('#ddlCourse').append(new Option('Choose Course',''));
+                    for(var i=0;i<count;i++)
+                        $('#ddlCourse').append(new Option(data.Courses[i].Course_Name,data.Courses[i].Course_Id));
+                }
+                else
+                {
+                    $('#ddlCourse').append(new Option('Choose Course',''));
+                }
+            }
+        },
+        error:function(err)
+        {
+            alert('Error! Please try again');
+            return false;
+        }
+    });
+    }
+    else{
+        LoadPractice();
+        $('#ddlCourse').empty();
+        $('#ddlCourse').append(new Option('Choose Course',''));
+    }
+}
+function downloadsubmit(){
+    if($('#FromDate').val()<$('#ToDate').val() ){
+        $('df').submit();
+    }
+    else{
+        swal({   title:"ERROR",
+                        text:"Please check the form details properly !!",
+                        icon:"error",
+                        confirmButtonClass:"btn btn-confirm mt-2"
+                        });
+    }
+}
+
+</script>
+
+        <div class="container-fluid">
+            <form method='POST' id="df" action="/download_func"> <!--method="POST" action="/add_center_category_details"-->
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                <li class="breadcrumb-item"><a href="/mcl_report">MCL DOWNLOAD REPORT</a></li>
+                                <li class="breadcrumb-item active">Report</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">MCL Report</h4>
+                    </div>
+                </div>
+            </div>     
+            <!-- end page title --> 
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-box">
+                        <h4 class="header-title">MCL Report</h4>
+                        <br/>
+                        <div class="alert alert-warning d-none fade show">
+                            <h4>Oh snap!</h4>
+                            <p class="mb-0">This form seems to be invalid :(</p>
+                        </div>
+
+                        <div class="alert alert-info d-none fade show">
+                            <h4>Yay!</h4>
+                            <p class="mb-0">Everything seems to be ok :)</p>
+                        </div>
+
+                        <form id="demo-form" data-parsley-validate="">
+                            
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label for="PracticeName">Practice Name * :</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <select id="ddlPractice" class="form-control dropdown-search-filter" data-live-search="true" onchange="CourseBasedOnUserPractice(this.value);"  name="PraticeId" ClientIdMode="static" required="">
+                                            <option value="">Choose Practice</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label for="CourseName">Course Name * :</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <select id="ddlCourse" class="form-control dropdown-search-filter" data-live-search="true" name="CourseId" ClientIdMode="static" required="">
+                                            <option value="">Choose Course</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row ">
+                                <div class="col-lg-6">
+                                        <label for="FromDate">From Date *:</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                <input type="text" id="FromDate" name="FromDate" class="form-control date-picker" ClientIdMode="static" placeholder="From Date">
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                                <div class="col-lg-6">
+                                        <label for="ToDate">To Date *:</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                <input type="text" id="ToDate" name="ToDate" class="form-control date-picker" ClientIdMode="static" placeholder="To Date">
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <div class="row">
+                                        <div class="col-lg-6">
+                                                <label for="ToDate">Sheet Format *:</label>
+                                            </div>&nbsp;&nbsp;
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="csv" value="csv" name="customRadio" checked="checked" class="custom-control-input">
+                                        <label class="custom-control-label" for="csv">CSV</label>
+                                    </div>&nbsp;&nbsp;
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="excel" value="excel" name="customRadio" class="custom-control-input">
+                                        <label class="custom-control-label" for="excel">EXCEL</label>
+                                    </div>
+                                </div>     
+                            </div>    
+
+                            <div class="form-group mb-0">
+                                <button class="btn btn-primary" onclick="downloadsubmit();" type="submit" >Download Report</button>
+                            </div>
+
+                        </form>
+                    </div> <!-- end card-box-->
+                </div> <!-- end col-->
+            </div>
+            <!-- end row-->
+
+        </form>
+        
+        </div> <!-- end container -->
+<script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+<script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+<script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>

@@ -1,0 +1,88 @@
+<link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+<link href="static/assets/libs/bootstrap-colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/libs/clockpicker/bootstrap-clockpicker.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/libs/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.dropdown-search-filter').select2();
+        $(".date-picker").flatpickr();            
+    });
+    
+    function report_func(){
+        if($('#ActivityDate').val()==""){
+            //alert("Please Provide Exact Date");
+            swal({   
+                    title:"ERROR",
+                    text:"Please Provide Exact Date",
+                    icon:"error",
+                    confirmButtonClass:"btn btn-confirm mt-2"
+                    });
+        }
+		else{
+			$('#demo-form').submit();
+		}
+    }
+</script>
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                <li class="breadcrumb-item"><a href="/tma_report">TMA-Report</a></li>
+                                <li class="breadcrumb-item active">Download TMA-Report</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">TMA-Report</h4>
+                    </div>
+                </div>
+            </div>     
+            <!-- end page title --> 
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-box">
+                        <h4 class="header-title">TMA-Report</h4>
+                        <br/>
+                        <div class="alert alert-warning d-none fade show">
+                            <h4>Oh snap!</h4>
+                            <p class="mb-0">This form seems to be invalid :(</p>
+                        </div>
+
+                        <div class="alert alert-info d-none fade show">
+                            <h4>Yay!</h4>
+                            <p class="mb-0">Everything seems to be ok :)</p>
+                        </div>
+						
+						
+                        <form id="demo-form"  method = "POST" action="/tma_report_download_func";>
+                            
+                            <div class="form-group row ">
+                                <div class="col-lg-6">
+                                        <label for="ActivityDate">Activity Date *:</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                <input type="text" id="ActivityDate" name="ActivityDate" class="form-control date-picker" ClientIdMode="static" placeholder="Activity Date" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <button class="btn btn-primary" type="button" onclick="report_func()">Download</button>
+                            </div>
+
+                        </form>
+                    </div> <!-- end card-box-->
+                </div> <!-- end col-->
+            </div>
+            <!-- end row-->
+
+        
+        </div> <!-- end container -->
+<script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+<script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+<script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>

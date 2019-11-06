@@ -1,0 +1,329 @@
+        <link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- App css -->
+        <link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+        <link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.dropdown-search-filter').select2();
+                LoadCenterddl();
+                LoadProjectddl();
+                alert('{{course_id}}');
+                if('{{course_id}}' !=-1)
+                {
+                    var URL=$('#hdn_web_url').val()+ "/GetCourseDetails";
+                    $.ajax({
+                        type:"GET",
+                        url:URL,
+                        success:function(data){
+                           if(data!=null)
+                           {
+                               if(data.CourseDetail!="")
+                               {                                    
+                                   //alert(JSON.stringify(data.CourseDetail));                                   
+                                   $('#CourseName').val(data.CourseDetail.Course_Name);
+                                   $('#ddlCenter').val(data.CourseDetail.Center_Id.split(',')).change();
+                                   $('#ddlProject').val(data.CourseDetail.Project_Id).change();
+                                    if(data.CourseDetail.Is_Active){
+                                        $('#isactive').prop('checked',true);}
+                                    else{
+                                        $('#isactive').prop('checked',false);}
+
+                                    var object = JSON.parse(data.CourseDetail.Session_Details);  
+                                    //alert(object);
+                                    var session_count=JSON.parse(data.CourseDetail.Session_Details).length;
+                                    console.log(session_count);
+                                    $('#session-name-container').html("");
+                                    $('#session-duration-container').html("");
+                                    $('#session-delete-container').html("");
+                                    Updatesessions(session_count,object);
+                               }
+                           } 
+                        },
+                        error:function(x){
+                            alert('error');
+                        }
+                    });
+                }
+            });
+            function Updatesessions(count,session_object){
+               // if(fieldCount==0 && divId == 0){
+                    for(var i=0;i<count;i++){
+                        let textbox = $('<input type="text" placeholder="Session Name" required="">').attr('class', 'form-control').attr('id', 'session_text_'+divId).attr('name','session_name').attr('value',session_object[i].session_name);
+                        let durationBox = $('<input type="number" placeholder="Session Duration in Hours" required="">').attr('class', 'form-control').attr('id', 'session_duration_'+divId).attr('name','session_duration').attr('value',session_object[i].session_duration);
+                        let deleteField = $('<button type="button" class="btn btn-danger waves-effect waves-light" onclick="removeSessionField(event)"><i class="mdi mdi-close"></i></button>').attr('id', 'session_del_btn_'+divId).attr('data-value', divId);
+                        $('#session-name-container').append(textbox);
+                        $('#session-duration-container').append(durationBox);
+                        $('#session-delete-container').append(deleteField);
+                        fieldCount++;
+                        divId++;
+                    }
+                }
+            //}
+
+            function LoadProjectddl()
+            {
+                var URL=$('#hdn_web_url').val()+ "/AllProjectsBasedOnPractice"
+                $.ajax({
+                    type:"POST",
+                    url:URL,
+                    async:false,
+                    beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+                    datatype:"json",
+                    data:{
+                        "practice_id": 0,
+                        "project_id" : 0
+                    },
+                    success: function (data){
+                        if(data.Projects != null)
+                        {
+                            $('#ddlProject').empty();
+                            var count=data.Projects.length;
+                            if( count> 0)
+                            {
+                                $('#ddlProject').append(new Option('Choose Project',''));
+                                for(var i=0;i<count;i++)
+                                    $('#ddlProject').append(new Option(data.Projects[i].Project_Name,data.Projects[i].Project_Id));
+                            }
+                            else
+                            {
+                                $('#ddlProject').append(new Option('Choose Project',''));
+                            }
+                        }
+                    },
+                    error:function(err)
+                    {
+                        alert('Error! Please try again');
+                        return false;
+                    }
+                });
+                return false;
+            }
+            
+            function LoadCenterddl(){
+                var URL=$('#hdn_web_url').val()+ "/AllCenterList"
+                $.ajax({
+                    type:"GET",
+                    url:URL,
+                    async:false,
+                    beforeSend:function(x){ if(x && x.overrideMimeType) { x.overrideMimeType("application/json;charset=UTF-8"); } },
+                    datatype:"json",
+                    success: function (data){
+                        if(data.Centers != null)
+                        {
+                            $('#ddlCenter').empty();
+                            var count=data.Centers.length;
+                            if( count> 0)
+                            {
+                                $('#ddlCenter').append(new Option('Choose Center',''));
+                                for(var i=0;i<count;i++)
+                                    $('#ddlCenter').append(new Option(data.Centers[i].Center_Name,data.Centers[i].Center_Id));
+                            }
+                            else
+                            {
+                                $('#ddlCenter').append(new Option('Choose Center',''));
+                            }
+                        }
+                    },
+                    error:function(err)
+                    {
+                        alert('Error! Please try again');
+                        return false;
+                    }
+                });
+                return false;
+            }
+            
+            function add_popup_message(){
+                var jsonString='';
+                let sessionname=[],sessionDuration=[];
+                if(fieldCount > 0)
+                {
+                    $('#session-name-container').children('input').each(function(){
+                        sessionname.push($(this).val());
+                    });
+                    $('#session-duration-container').children('input').each(function(){
+                        sessionDuration.push($(this).val());
+                    });
+                    for(let i=0;i<fieldCount;i++)
+                    {
+                        jsonString+='{ "session_name" : "'+ sessionname[i] + '", "session_duration" : '+  sessionDuration[i] +' },';
+                    }         
+                    jsonString = jsonString.substring(0, jsonString.length - 1);
+                    jsonString='[ ' + jsonString + ' ]';
+                    //alert(jsonString);        
+                }
+                else
+                    jsonString='[]';
+               // console.log(jsonObject);
+               var URL=$('#hdn_web_url').val()+ "/add_course_details";
+                   $.ajax({
+                       type:"POST",
+                       url:URL,
+                       data:{
+                           "CourseName" : $('#CourseName').val(),
+                           "isactive" : $('#isactive').prop('checked'),
+                           "CenterId":$('#ddlCenter').val().toString(),
+                           "SessionJSON":jsonString,
+						   "CourseId":'{{course_id}}'
+                       },
+                       success:function(data){
+                           swal({   title:data.PopupMessage.message,
+                                   text:data.PopupMessage.message+" Successfully !!",
+                                   icon:"success",
+                                   confirmButtonClass:"btn btn-confirm mt-2"
+                                   }).then(function(){
+                                       window.location.href = '/after_popup_course';
+                                   }
+                                   );
+                       },
+                       error:function(x){
+                           alert('error');
+                       }
+                   });
+          
+           }
+        
+            var fieldCount = 0,divId=0;
+            function addSessionField() {
+                //alert(fieldCount);
+                let textbox = $('<input type="text" placeholder="Session Name" required="">').attr('class', 'form-control').attr('id', 'session_text_'+divId).attr('name','session_name');
+                let durationBox = $('<input type="number" placeholder="Session Duration in Hours" required="">').attr('class', 'form-control').attr('id', 'session_duration_'+divId).attr('name','session_duration');
+                let deleteField = $('<button type="button" class="btn btn-danger waves-effect waves-light" onclick="removeSessionField(event)"><i class="mdi mdi-close"></i></button>').attr('id', 'session_del_btn_'+divId).attr('data-value', divId);
+                $('#session-name-container').append(textbox);
+                $('#session-duration-container').append(durationBox);
+                $('#session-delete-container').append(deleteField);
+                fieldCount++;
+                divId++;
+            }
+            function removeSessionField(e) {
+                //alert(e);
+                let position = e.target.getAttribute('data-value');
+                //alert(position);
+                    $('#session_text_'+position).remove();
+                    $('#session_duration_'+position).remove();
+                    $('#session_del_btn_'+position).remove();
+                    if(position !=null)
+                        fieldCount--;
+            }
+        </script>
+                <div class="container-fluid">
+                    <form action="javascript:add_popup_message();">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                                        <li class="breadcrumb-item"><a href="/course">Courses</a></li>
+                                        <li class="breadcrumb-item active">Add-Edit Course</li>
+                                    </ol>
+                                </div>
+                                <h4 class="page-title">Course Details</h4>
+                            </div>
+                        </div>
+                    </div>     
+                    <!-- end page title --> 
+    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-box">
+                                <h4 class="header-title">Course Details</h4>
+                                <br/>
+                                <div class="alert alert-warning d-none fade show">
+                                    <h4>Oh snap!</h4>
+                                    <p class="mb-0">This form seems to be invalid :(</p>
+                                </div>
+    
+                                <div class="alert alert-info d-none fade show">
+                                    <h4>Yay!</h4>
+                                    <p class="mb-0">Everything seems to be ok :)</p>
+                                </div>
+    
+                                <form id="demo-form" data-parsley-validate="">
+                                    
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="CourseName">Course Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="CourseName" id="CourseName" required placeholder="Course name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" hidden>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ddlProject">Project *:</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <select id="ddlProject" class="form-control" name="ProjectId" ClientIdMode="static" >
+                                                    <option value="">Choose Project</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="ddlCenter">Center *:</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <select id="ddlCenter" class="form-control dropdown-search-filter" data-live-search="true" multiple data-selected-text-format="count > 3" name="CenterId" ClientIdMode="static" required="">
+                                                        <option value="">Choose Center</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="form-group row">
+                                            <div class="col-lg-6">
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <button onclick="addSessionField();" type="button" class="btn btn-info btn-rounded waves-effect waves-light"> Add Session</button>
+                                            </div>
+                                        </div>
+                                        <form id="Sessions">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-4" id="session-name-container" >                                                   
+                                                </div>
+                                                <div class="col-lg-4" id="session-duration-container" >
+                                                </div>
+                                                <div class="col-lg-1" id="session-delete-container" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label>Is Active :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkbox checkbox-pink mb-0">
+                                                    <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                    value="" data-parsley-mincheck="1" >
+                                                    <label for="isactive"> Is active </label>
+                                                </div>
+                                            </div>   
+                                        </div>                                     
+                                    </div>    
+    
+                                    <div class="form-group mb-0">
+                                        <button class="btn btn-primary" type="submit" ClientIdMode="static">Save</button>
+                                    </div>
+                                </form>
+                            </div> <!-- end card-box-->
+                        </div> <!-- end col-->
+                    </div>
+                    <!-- end row-->
+    
+                </form>
+                
+                </div> <!-- end container -->
+        <script src="static/assets/libs/flatpickr/flatpickr.min.js"></script>
+        <script src="static/assets/libs/jquery-knob/jquery.knob.min.js"></script>
+        <script src="static/assets/libs/jquery-sparkline/jquery.sparkline.min.js"></script>

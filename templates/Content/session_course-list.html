@@ -1,0 +1,395 @@
+<link href="static/assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
+        
+<!-- third party css -->
+<link href="static/assets/libs/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<!-- third party css end -->
+
+<!-- App css -->
+<link href="static/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/libs/datatables/responsive.dataTables.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<link href="static/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+<style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+        }
+    </style>
+    
+<div class="container-fluid">
+    <form action="javascript:add_popup_message();">
+        
+        <input type="hidden" id="hdn_session_id" name="hdn_session_id" value="0">
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">LN</a></li>
+                            <li class="breadcrumb-item"><a href="/course">Courses</a></li>
+                            <li class="breadcrumb-item active"> Sessions to Course</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Sessions Details</h4>
+                </div>
+            </div>
+        </div> 
+        <form id="demo-form" data-parsley-validate="">
+        <div  class="row">
+                <div id='getsessionplan' class="col-12">
+                    <div class="card-box">
+                            <h4 class="header-title">Session Plans</h4>
+                            <br/>
+                            <div class="alert alert-warning d-none fade show">
+                                <h4>Oh snap!</h4>
+                                <p class="mb-0">This form seems to be invalid :(</p>
+                            </div>
+
+                            <div class="alert alert-info d-none fade show">
+                                <h4>Yay!</h4>
+                                <p class="mb-0">Everything seems to be ok :)</p>
+                            </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="ddlSessionPlan">Session Plan *:</label>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <select id="ddlSessionPlan" class="form-control dropdown-search-filter" data-live-search="true" onchange="GetModulelist(this.value);" name="SessionPlanId" ClientIdMode="static" required="">
+                                                <option value="">Choose Session Plan</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button class="btn" style="cursor:pointer" onclick="javascript:$('#AddSessionPlan').show();$('#getsessionplan').hide();"><i style="color: #00AA00;" title="Add Session" class="fas fa-plus"></i></button> 
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+              </div>
+        </div>
+        
+<div id="AddSessionPlan"  class="row" style="display: none;">
+        <div class="card-box col-12">
+
+                    <h4 class="header-title">ADD Session Plans</h4>
+                    <br/>
+                    <div class="alert alert-warning d-none fade show">
+                        <h4>Oh snap!</h4>
+                        <p class="mb-0">This form seems to be invalid :(</p>
+                    </div>
+
+                    <div class="alert alert-info d-none fade show">
+                        <h4>Yay!</h4>
+                        <p class="mb-0">Everything seems to be ok :)</p>
+                    </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <label for="SessionPlanName">Session Plan Name * :</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" name="SessionPlanName" id="SessionPlanName" required placeholder="Session Plan name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label for="SessionPlanDuration">Session Plan Duration * :</label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                                <input type="number" min="0" class="form-control" name="SessionPlanDuration" id="SessionPlanDuration" placeholder="Session Duration in Hours" required="">
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <label>Is Active :</label>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="checkbox checkbox-pink mb-0">
+                                                <input type="checkbox" name="isactive" id="isactive" ClientIdMode="static" 
+                                                                value="1" data-parsley-mincheck="1" >
+                                                <label for="isactive"> Is active </label>
+                                            </div>
+                                        </div>   
+                                    </div>                                     
+                            </div>  
+                            <div class="form-group mb-0">
+                                    <button class="btn btn-primary" onclick="AddSessionPlanDetail();">Add</button><button class="btn btn-primary " style="float: right;"onclick="javascript:$('#getsessionplan').show();$('#AddSessionPlan').hide();" >Close</button>
+                            </div>
+                </div>
+        </div>
+
+        <div class="moduleDiv row" style="display: none;">
+            <div id="getmodule" class="col-12">
+                <div class="card-box">
+                        <h4 class="header-title">Modules</h4>
+                        <br/>
+                        <div class="alert alert-warning d-none fade show">
+                            <h4>Oh snap!</h4>
+                            <p class="mb-0">This form seems to be invalid :(</p>
+                        </div>
+
+                        <div class="alert alert-info d-none fade show">
+                            <h4>Yay!</h4>
+                            <p class="mb-0">Everything seems to be ok :)</p>
+                        </div>
+                                <div class=" form-group" >
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <label for="ddlModule">Module *:</label>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <select id="ddlModule" class="form-control dropdown-search-filter" data-live-search="true" onchange="TableforSessions(this.value)" name="ModuleId" ClientIdMode="static" required="">
+                                                <option value="">Choose Module </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <button class="btn" onclick="javascript:$('#AddModule').show();$('#getmodule').hide();" style="cursor:pointer"><i style="color: #00AA00;" title="Add Module" class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                </div>
+            </div>
+        </div>
+ 
+        <div id="AddModule"  class="row" style="display: none;">
+                <div class="card-box col-12">
+        
+                            <h4 class="header-title">ADD Modules</h4>
+                            <br/>
+                            <div class="alert alert-warning d-none fade show">
+                                <h4>Oh snap!</h4>
+                                <p class="mb-0">This form seems to be invalid :(</p>
+                            </div>
+        
+                            <div class="alert alert-info d-none fade show">
+                                <h4>Yay!</h4>
+                                <p class="mb-0">Everything seems to be ok :)</p>
+                            </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <label for="ModuleName">Module Name * :</label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" name="ModuleName" id="ModuleName" required placeholder="Module name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="ModuleCode">Module Code * :</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                        <input type="text" class="form-control" name="ModuleCode" id="ModuleCode" placeholder="Module Code" required="">
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label for="ModuleOrder">Module Order * :</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                        <input type="number" class="form-control" name="ModuleOrder" id="ModuleOrder" placeholder="Module Order"readonly required="">
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label>Is Active :</label>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="checkbox checkbox-pink mb-0">
+                                                        <input type="checkbox" name="module_isactive" id="module_isactive" ClientIdMode="static" 
+                                                                        value="1" data-parsley-mincheck="1" >
+                                                        <label for="module_isactive"> Is active </label>
+                                                    </div>
+                                                </div>   
+                                            </div>                                     
+                                    </div>  
+                                    <div class="form-group mb-0">
+                                            <button class="btn btn-primary" onclick="AddModuleDetail();" >Add</button><button class="btn btn-primary " style="float: right;"onclick="javascript:$('#getmodule').show();$('#AddModule').hide();" >Close</button>
+                                    </div>
+                        </div>
+                </div>
+              
+        <div id="getsessions"  class="row" style="display: none;">
+            <div class="col-12">
+                <div class="card-box">
+                        <h4 class="header-title">Sessions</h4>
+                        <br/>
+                        <div class="alert alert-warning d-none fade show">
+                            <h4>Oh snap!</h4>
+                            <p class="mb-0">This form seems to be invalid :(</p>
+                        </div>
+
+                        <div class="alert alert-info d-none fade show">
+                            <h4>Yay!</h4>
+                            <p class="mb-0">Everything seems to be ok :)</p>
+                        </div>
+                                <div class="col-lg-12">
+                                        <button id="addsession" class="btn" style="float: right;"onclick="javascript:$('#add_edit_session').show();$('#getsessions').hide();"><i style="color: #00AA00;" title="Add Session" class="fas fa-plus" ></i></button> 
+                                        <table id="tbl_sessions"  class="table dt-responsive nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Action</th>
+                                                    <th>Name</th>
+                                                    <th>Code</th>
+                                                    <th>Order</th>
+                                                    <th>Duration(In Munites)</th>
+                                                    <th>Session Type</th>
+                                                </tr>
+                                            </thead>
+                                        
+                                        <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            <div id="add_edit_session"  class="row" style="display: none;">
+                            <div class="card-box col-12">
+                    
+                                        <h4 class="header-title">ADD-EDIT Sessions</h4>
+                                        <br/>
+                                        <div class="alert alert-warning d-none fade show">
+                                            <h4>Oh snap!</h4>
+                                            <p class="mb-0">This form seems to be invalid :(</p>
+                                        </div>
+                    
+                                        <div class="alert alert-info d-none fade show">
+                                            <h4>Yay!</h4>
+                                            <p class="mb-0">Everything seems to be ok :)</p>
+                                        </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <label for="SessionName">Session Name * :</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input type="text" class="form-control" name="SessionName" id="SessionName" required placeholder="Session name">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="SessionDuration">Session  Duration * :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                    <input type="number" class="form-control" name="SessionDuration" id="SessionDuration" placeholder="Session Duration in Hours" required="">
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="SessionCode">Session Code * :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                    <input type="text" class="form-control" name="SessionCode" id="SessionCode" placeholder="Session Code" readonly required="">
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="SessionOrder">Session Order * :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                    <input type="number" class="form-control" name="SessionOrder" id="SessionOrder" placeholder="Session Order" readonly required="">
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <label for="LearningOutcome">Learning outcomes * :</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input type="text" class="form-control" name="LearningOutcome" id="LearningOutcome" required placeholder="Session Outcome">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="SessionDescription"> Session Description * :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                    <input type="text" class="form-control" name="SessionDescription" id="SessionDescription" placeholder="Session Description" required="">
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <label for="LearningAids">Learning Aids * :</label>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <input type="text" class="form-control" name="LearningAids" id="LearningAids" required placeholder="Learning Aids">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="LearningAct">Learning Activity * :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                    <input type="text" class="form-control" name="LearningAct" id="LearningAct" placeholder="Learning Activity" required="">
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label>Is Active :</label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="checkbox checkbox-pink mb-0">
+                                                                    <input type="checkbox" name="session_isactive" id="session_isactive" ClientIdMode="static" 
+                                                                                    value="1" data-parsley-mincheck="1" >
+                                                                    <label for="session_isactive"> Is active </label>
+                                                                </div>
+                                                            </div>   
+                                                        </div>                                     
+                                                </div>  
+                                                <div class="form-group mb-0">
+                                                        <button class="btn btn-primary" onclick="AddEditSessionDetail();" >Add</button><button class="btn btn-primary " style="float: right;"onclick="javascript:$('#getsessions').show();$('#add_edit_session').hide();" >Close</button>
+                                                </div>
+                                    </div>
+                            </div>    
+                    </form>
+    </form>
+</div>
+        
+
+
+<script src="static/assets/libs/datatables/jquery.dataTables.min.js"></script>
+<script src="static/assets/libs/datatables/dataTables.bootstrap4.js"></script>
+<script src="static/assets/libs/datatables/dataTables.responsive.min.js"></script>
+<script src="static/assets/libs/datatables/responsive.bootstrap4.min.js"></script>
+<script src="static/assets/libs/datatables/dataTables.buttons.min.js"></script>
+<script src="static/assets/libs/datatables/buttons.bootstrap4.min.js"></script>
+<script src="static/assets/libs/datatables/buttons.html5.min.js"></script>
+<script src="static/assets/libs/datatables/buttons.flash.min.js"></script>
+<script src="static/assets/libs/datatables/buttons.print.min.js"></script>
+<script src="static/assets/libs/datatables/dataTables.keyTable.min.js"></script>
+<script src="static/assets/libs/datatables/dataTables.select.min.js"></script>
+<script src="static/assets/libs/datatables/dataTables.responsive.min.js"></script>
+<!-- third party js ends -->
+
+<!-- datatables init js-->
+<script src="static/assets/js/pages/session_course-list.js"></script>
+
+<!-- App js-->
